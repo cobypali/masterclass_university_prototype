@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MasterClass - Discussion Section</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; background: none; border: none; color: inherit; font-family: inherit; }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .logo-img {
+      height: 64px;
+      width: auto;
+      object-fit: contain;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #1a1a1a;
+      border-radius: 4px;
+      padding: 8px 14px;
+      gap: 10px;
+      min-width: 340px;
+    }
+    .search-bar svg { flex-shrink: 0; opacity: 0.5; }
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #999;
+      font-size: 13px;
+      width: 100%;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .my-progress { font-size: 13px; color: #ccc; white-space: nowrap; }
+    .user-avatar { display: flex; align-items: center; gap: 8px; }
+    .avatar-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #e8a838, #c67b1a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: #fff; text-transform: lowercase;
+    }
+    .username { font-size: 13px; color: #ccc; }
+    .dropdown-arrow { opacity: 0.6; font-size: 10px; }
+
+    /* ==================== FULLSCREEN CAMERA PROMPT ==================== */
+    .cam-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      text-align: center;
+    }
+    .cam-overlay.hidden { display: none; }
+    .cam-overlay svg {
+      width: 64px;
+      height: 64px;
+      opacity: 0.6;
+    }
+    .cam-overlay h2 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .cam-overlay p {
+      font-size: 15px;
+      color: #999;
+      max-width: 400px;
+    }
+    .enable-cam-btn {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      padding: 14px 36px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+    .enable-cam-btn:hover { background: #c62828; }
+
+    /* ==================== MAIN CONTENT (hidden until cam granted) ==================== */
+    .page-content { display: none; }
+    .page-content.visible { display: block; }
+
+    .discussion-content {
+      padding: 24px 32px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #aaa;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #fff; }
+    .discussion-header {
+      margin-bottom: 20px;
+    }
+    .discussion-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .discussion-header p {
+      font-size: 14px;
+      color: #888;
+    }
+    .online-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: #4caf50;
+      margin-top: 8px;
+    }
+    .online-dot {
+      width: 8px; height: 8px;
+      background: #4caf50;
+      border-radius: 50%;
+    }
+
+    /* ==================== VIDEO WRAPPER ==================== */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      background: #111;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .video-wrapper video.main-video {
+      width: 100%;
+      max-height: calc(100vh - 200px);
+      display: block;
+      background: #111;
+      object-fit: contain;
+    }
+    .video-label {
+      position: absolute;
+      bottom: 60px;
+      left: 16px;
+      background: rgba(0,0,0,0.7);
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 500;
+      z-index: 3;
+    }
+
+    /* Webcam PiP overlay - bottom left quarter */
+    .webcam-pip {
+      position: absolute;
+      bottom: 80px;
+      right: 310px;
+      width: 36.5%;
+      aspect-ratio: 16 / 9;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid rgba(255,255,255,0.2);
+      z-index: 5;
+      background: #000;
+    }
+    .webcam-pip video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scaleX(-1);
+    }
+    .webcam-pip-label {
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="logo">
+        <img src="Logo v04.png" alt="MasterClass" class="logo-img">
+      </a>
+      <div class="search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search Instructors, Classes, Topics and more" readonly>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="#" class="my-progress">My Progress</a>
+      <div class="user-avatar">
+        <span class="username">Coby Palivathukal</span>
+        <div class="avatar-circle">C</div>
+        <span class="dropdown-arrow">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== CAMERA PROMPT OVERLAY ==================== -->
+  <div class="cam-overlay" id="camOverlay">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+    </svg>
+    <h2>Join the Discussion</h2>
+    <p>Turn on your camera to enter the live discussion section.</p>
+    <button class="enable-cam-btn" id="enableCamBtn">Turn On Camera</button>
+  </div>
+
+  <!-- ==================== PAGE CONTENT (hidden until cam on) ==================== -->
+  <div class="page-content" id="pageContent">
+    <div class="discussion-content">
+      <a href="index.html" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Back to Course
+      </a>
+
+      <div class="discussion-header">
+        <h1>Discussion Section</h1>
+        <p>Sam Altman &mdash; Building Companies that Shape the Future with AI</p>
+        <div class="online-badge"><span class="online-dot"></span> 7 currently online</div>
+      </div>
+
+      <div class="video-wrapper">
+        <video class="main-video" id="discussionVideo" controls preload="metadata" autoplay loop muted>
+          <source src="2_Discussion_Section.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+
+        <!-- Webcam PiP -->
+        <div class="webcam-pip">
+          <video id="webcamVideo" autoplay playsinline muted></video>
+          <div class="webcam-pip-label">You</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const enableCamBtn = document.getElementById('enableCamBtn');
+    const camOverlay = document.getElementById('camOverlay');
+    const pageContent = document.getElementById('pageContent');
+    const webcamVideo = document.getElementById('webcamVideo');
+    const discussionVideo = document.getElementById('discussionVideo');
+
+    enableCamBtn.addEventListener('click', async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        webcamVideo.srcObject = stream;
+        // Hide overlay, show page
+        camOverlay.classList.add('hidden');
+        pageContent.classList.add('visible');
+        // Auto-play the discussion video with audio
+        discussionVideo.muted = false;
+        discussionVideo.play();
+      } catch (err) {
+        alert('Camera access was denied. Please allow camera access to join the discussion.');
+      }
+    });
+  </script>
+
+</body>
+</html>

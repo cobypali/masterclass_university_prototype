@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MasterClass - Chris Voss: The Art of Negotiation</title>
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; background: none; border: none; color: inherit; font-family: inherit; }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .logo-img {
+      height: 64px;
+      width: auto;
+      object-fit: contain;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #1a1a1a;
+      border-radius: 4px;
+      padding: 8px 14px;
+      gap: 10px;
+      min-width: 340px;
+    }
+    .search-bar svg { flex-shrink: 0; opacity: 0.5; }
+    .search-bar input {
+      background: none;
+      border: none;
+      outline: none;
+      color: #999;
+      font-size: 13px;
+      width: 100%;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .my-progress {
+      font-size: 13px;
+      color: #ccc;
+      white-space: nowrap;
+    }
+    .user-avatar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .avatar-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e8a838, #c67b1a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      text-transform: lowercase;
+    }
+    .username {
+      font-size: 13px;
+      color: #ccc;
+    }
+    .dropdown-arrow {
+      opacity: 0.6;
+      font-size: 10px;
+    }
+
+    /* ==================== MAIN LAYOUT ==================== */
+    .main-content {
+      display: flex;
+      max-width: 100%;
+      min-height: calc(100vh - 56px);
+    }
+    .left-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .right-sidebar {
+      width: 340px;
+      min-width: 340px;
+      background: #141414;
+      border-left: 1px solid #1a1a1a;
+      overflow-y: auto;
+      max-height: calc(100vh - 56px);
+    }
+
+    /* ==================== VIDEO PLAYER ==================== */
+    .video-container {
+      width: 100%;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0;
+    }
+    .video-container video {
+      width: 100%;
+      height: 1000px;
+      display: block;
+      background: #111;
+      object-fit: contain;
+    }
+
+    /* ==================== BELOW VIDEO ==================== */
+    .below-video {
+      padding: 20px 24px 32px;
+      display: flex;
+      gap: 32px;
+    }
+    .lesson-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .lesson-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .lesson-description {
+      font-size: 14px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 24px;
+      flex-shrink: 0;
+      align-self: flex-start;
+      padding-top: 4px;
+    }
+    .action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-width: 70px;
+    }
+    .action-btn-icon {
+      width: 48px;
+      height: 48px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s;
+    }
+    .action-btn:hover .action-btn-icon { border-color: rgba(255,255,255,0.6); }
+    .action-btn-icon svg { width: 20px; height: 20px; opacity: 0.9; }
+    .action-btn-label {
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    /* ==================== RIGHT SIDEBAR ==================== */
+    .university-section {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .university-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+    .uni-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      background: #1e1e1e;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .uni-btn:last-child { margin-bottom: 0; }
+    .uni-btn:hover {
+      background: #262626;
+      border-color: #444;
+    }
+    .uni-btn-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .uni-btn-desc {
+      font-size: 14px;
+      color: #888;
+      line-height: 1.4;
+    }
+
+    .instructor-header {
+      padding: 24px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .instructor-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #8b7355, #5a4a3a);
+      flex-shrink: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.7);
+    }
+    .instructor-info h2 {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .instructor-info p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* Tabs */
+    .sidebar-tabs {
+      display: flex;
+      gap: 20px;
+      padding: 0 20px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .sidebar-tab {
+      padding: 12px 0;
+      font-size: 14px;
+      color: #888;
+      position: relative;
+    }
+    .sidebar-tab.active {
+      color: #fff;
+      font-weight: 600;
+    }
+    .sidebar-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #fff;
+    }
+
+    /* Course Description */
+    .course-description {
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+    .course-meta {
+      padding: 0 20px 12px;
+      font-size: 13px;
+      color: #888;
+    }
+
+    /* Lesson List */
+    .lesson-list {
+      padding: 0 0 20px;
+    }
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .lesson-item:hover { background: rgba(255,255,255,0.05); }
+    .lesson-item.active { background: rgba(255,255,255,0.08); }
+    .lesson-thumb {
+      width: 120px;
+      height: 68px;
+      background: #2a2a2a;
+      border-radius: 4px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .lesson-thumb-img {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #3a2a1a, #1a1510);
+    }
+    .lesson-thumb-img.lesson-9 {
+      background: linear-gradient(135deg, #2a2520, #1a1510);
+    }
+    .lesson-thumb-img.lesson-10 {
+      background: linear-gradient(135deg, #2a2018, #1a1210);
+    }
+    .lesson-thumb-img.lesson-11 {
+      background: linear-gradient(135deg, #2a2520, #181410);
+    }
+    .lesson-thumb-img.lesson-12 {
+      background: linear-gradient(135deg, #2a2018, #1a1510);
+    }
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+    }
+    .play-overlay svg { width: 28px; height: 28px; opacity: 0.9; }
+    .thumb-duration {
+      position: absolute;
+      bottom: 4px;
+      right: 6px;
+      font-size: 11px;
+      background: rgba(0,0,0,0.7);
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .lesson-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .lesson-item-number {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 2px;
+    }
+    .lesson-item-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #ddd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lesson-item.active .lesson-item-name { color: #fff; }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 1024px) {
+      .main-content { flex-direction: column; }
+      .right-sidebar {
+        width: 100%;
+        min-width: unset;
+        max-height: none;
+        border-left: none;
+        border-top: 1px solid #1a1a1a;
+      }
+      .search-bar { min-width: 200px; }
+    }
+    @media (max-width: 640px) {
+      .search-bar { display: none; }
+      .below-video { flex-direction: column; gap: 20px; }
+      .action-buttons { align-self: stretch; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="header-left">
+      <a href="#" class="logo">
+        <img src="Logo v04.png" alt="MasterClass" class="logo-img">
+      </a>
+      <div class="search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search Instructors, Classes, Topics and more" readonly>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="#" class="my-progress">My Progress</a>
+      <div class="user-avatar">
+        <span class="username">Coby Palivathukal</span>
+        <div class="avatar-circle">C</div>
+        <span class="dropdown-arrow">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <div class="main-content">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <!-- Video Player -->
+      <div class="video-container">
+        <!-- Replace the src with your video file, e.g. src="video.mp4" -->
+        <video id="mainVideo" controls preload="metadata">
+          <source src="1_Intro_Sam.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Below Video Section -->
+      <div class="below-video">
+        <div class="lesson-info">
+          <h1 class="lesson-title">Intro to Sam Altman on Building Companies that Shape the Future with AI</h1>
+          <p class="lesson-description">Sam Altman teaches how to spot the next technological inflection points, build AI-native startups at lightning speed, and create companies that shape the future.</p>
+        </div>
+        <div class="action-buttons">
+          <!-- Share -->
+          <button class="action-btn">
+            <div class="action-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+            </div>
+            <span class="action-btn-label">Share</span>
+          </button>
+          <!-- Class Guide -->
+          <button class="action-btn">
+            <div class="action-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            </div>
+            <span class="action-btn-label">Class Guide</span>
+          </button>
+          <!-- Bookmark -->
+          <button class="action-btn">
+            <div class="action-btn-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            </div>
+            <span class="action-btn-label">Bookmark</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="right-sidebar">
+      <!-- Masterclass University -->
+      <div class="university-section">
+        <img src="Logo v02.png" alt="MasterClass University" style="width:100%; max-width:220px; display:block; margin: 0 auto 4px;">
+        <button class="uni-btn" onclick="window.location.href='discussion.html'">
+          <div class="uni-btn-title">Discussion Sections</div>
+          <div style="font-size:12px; color:#4caf50; margin-bottom:4px;">&#9679; 6 currently online</div>
+          <div class="uni-btn-desc">Live, instructor-led learning with peers</div>
+        </button>
+        <button class="uni-btn" onclick="window.location.href='officehours.html'">
+          <div class="uni-btn-title">Office Hours</div>
+          <div class="uni-btn-desc">Personalized 1:1 help, anytime</div>
+        </button>
+        <button class="uni-btn" onclick="window.location.href='capstone.html'">
+          <div class="uni-btn-title">Capstone Project</div>
+          <div class="uni-btn-desc">Prove mastery through a project to earn course credit</div>
+        </button>
+        <button class="uni-btn" onclick="window.location.href='certificate.html'">
+          <div class="uni-btn-title">Certificate Completion Status</div>
+          <div class="uni-btn-desc">Track progress toward certification</div>
+        </button>
+      </div>
+
+      <!-- Instructor Header -->
+      <div class="instructor-header">
+        <div class="instructor-avatar">SA</div>
+        <div class="instructor-info">
+          <h2>Sam Altman</h2>
+          <p>Building Companies that Shape the Future with AI</p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active">All Lessons</button>
+        <button class="sidebar-tab">My Notes</button>
+      </div>
+
+      <!-- Course Description -->
+      <div class="course-description">
+        Sam Altman teaches how to spot the next technological inflection points, build AI-native startups at lightning speed, and create companies that shape the future.
+      </div>
+      <div class="course-meta">18 lessons &middot; 3 hr 4 min</div>
+
+      <!-- Lesson List -->
+      <div class="lesson-list">
+        <!-- Lesson 1 (Active) -->
+        <div class="lesson-item active">
+          <div class="lesson-thumb">
+            <div class="lesson-thumb-img lesson-9"></div>
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="thumb-duration">12:34</span>
+          </div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-name">1. Think in Futures, Not Features</div>
+          </div>
+        </div>
+
+        <!-- Lesson 2 -->
+        <div class="lesson-item">
+          <div class="lesson-thumb">
+            <div class="lesson-thumb-img lesson-10"></div>
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="thumb-duration">15:21</span>
+          </div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-name">2. Build With AI as Your First Employee</div>
+          </div>
+        </div>
+
+        <!-- Lesson 3 -->
+        <div class="lesson-item">
+          <div class="lesson-thumb">
+            <div class="lesson-thumb-img lesson-11"></div>
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="thumb-duration">09:47</span>
+          </div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-name">3. Find Product&ndash;Market Fit Fast</div>
+          </div>
+        </div>
+
+        <!-- Lesson 4 -->
+        <div class="lesson-item">
+          <div class="lesson-thumb">
+            <div class="lesson-thumb-img lesson-12"></div>
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="thumb-duration">11:55</span>
+          </div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-name">4. Scale Teams, Culture, and Capital</div>
+          </div>
+        </div>
+
+        <!-- Lesson 5 -->
+        <div class="lesson-item">
+          <div class="lesson-thumb">
+            <div class="lesson-thumb-img lesson-9"></div>
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+            <span class="thumb-duration">13:08</span>
+          </div>
+          <div class="lesson-item-info">
+            <div class="lesson-item-name">5. Build Something That Actually Matters</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+</body>
+</html>

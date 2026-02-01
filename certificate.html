@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MasterClass - Certificate Completion Status</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; background: none; border: none; color: inherit; font-family: inherit; }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 56px;
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-left { display: flex; align-items: center; gap: 24px; }
+    .logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 15px; font-weight: 600; letter-spacing: 0.5px; white-space: nowrap;
+    }
+    .logo-img { height: 64px; width: auto; object-fit: contain; }
+    .search-bar {
+      display: flex; align-items: center; background: #1a1a1a;
+      border-radius: 4px; padding: 8px 14px; gap: 10px; min-width: 340px;
+    }
+    .search-bar svg { flex-shrink: 0; opacity: 0.5; }
+    .search-bar input {
+      background: none; border: none; outline: none; color: #999; font-size: 13px; width: 100%;
+    }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .my-progress { font-size: 13px; color: #ccc; white-space: nowrap; }
+    .user-avatar { display: flex; align-items: center; gap: 8px; }
+    .avatar-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, #e8a838, #c67b1a);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: #fff; text-transform: lowercase;
+    }
+    .username { font-size: 13px; color: #ccc; }
+    .dropdown-arrow { opacity: 0.6; font-size: 10px; }
+
+    /* ==================== PAGE CONTENT ==================== */
+    .page-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 40px 60px;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: #aaa; font-size: 14px; margin-bottom: 24px; transition: color 0.2s;
+    }
+    .back-link:hover { color: #fff; }
+
+    /* ==================== HERO SECTION ==================== */
+    .hero {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      margin-bottom: 48px;
+    }
+    .hero-cert {
+      width: 380px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    .hero-cert img {
+      width: 100%;
+      display: block;
+    }
+    .hero-info {
+      flex: 1;
+    }
+    .hero-info h1 {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .hero-info h1 span {
+      background: linear-gradient(135deg, #e8a838, #c67b1a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-info .hero-desc {
+      font-size: 15px;
+      color: #999;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Overall Progress */
+    .overall-progress {
+      margin-bottom: 8px;
+    }
+    .overall-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .overall-progress-header span {
+      font-size: 14px;
+      color: #aaa;
+    }
+    .overall-progress-header strong {
+      font-size: 14px;
+      color: #fff;
+    }
+    .overall-bar {
+      width: 100%;
+      height: 10px;
+      background: #222;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .overall-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #e8a838, #c67b1a);
+      border-radius: 5px;
+      transition: width 0.6s ease;
+    }
+    .overall-label {
+      font-size: 13px;
+      color: #666;
+      margin-top: 6px;
+    }
+
+    /* ==================== CLASSES SECTION ==================== */
+    .classes-section {
+      margin-top: 48px;
+    }
+    .classes-section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .class-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 24px;
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .class-card:hover {
+      background: #161616;
+      border-color: #333;
+    }
+    .class-card.completed {
+      border-color: #2e7d32;
+    }
+
+    .class-headshot {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #222;
+    }
+    .class-headshot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .class-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .class-instructor {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .class-title {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .class-progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .class-progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
+    .class-progress-fill.in-progress {
+      background: linear-gradient(90deg, #e8a838, #c67b1a);
+    }
+    .class-progress-fill.complete {
+      background: #4caf50;
+    }
+    .class-progress-fill.not-started {
+      background: #333;
+    }
+
+    .class-status {
+      flex-shrink: 0;
+      text-align: right;
+      min-width: 90px;
+    }
+    .class-percent {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .class-percent.complete { color: #4caf50; }
+    .class-percent.in-progress { color: #e8a838; }
+    .class-percent.not-started { color: #555; }
+    .class-status-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .class-status-label.complete { color: #4caf50; }
+    .class-status-label.in-progress { color: #e8a838; }
+    .class-status-label.not-started { color: #555; }
+
+    .checkmark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #4caf50;
+      border-radius: 50%;
+      margin-bottom: 2px;
+    }
+    .checkmark svg { width: 14px; height: 14px; }
+
+    @media (max-width: 800px) {
+      .hero { flex-direction: column; }
+      .hero-cert { width: 100%; max-width: 380px; }
+      .page-content { padding: 24px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header">
+    <div class="header-left">
+      <a href="index.html" class="logo">
+        <img src="Logo v04.png" alt="MasterClass" class="logo-img">
+      </a>
+      <div class="search-bar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" placeholder="Search Instructors, Classes, Topics and more" readonly>
+      </div>
+    </div>
+    <div class="header-right">
+      <a href="#" class="my-progress">My Progress</a>
+      <div class="user-avatar">
+        <span class="username">Coby Palivathukal</span>
+        <div class="avatar-circle">C</div>
+        <span class="dropdown-arrow">&#9662;</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== PAGE CONTENT ==================== -->
+  <div class="page-content">
+    <a href="index.html" class="back-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Course
+    </a>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-cert">
+        <img src="Certificate.jpg" alt="MasterClass Professional Certificate in Applied AI">
+      </div>
+      <div class="hero-info">
+        <h1>MasterClass Professional Certificate in <span>Applied AI</span></h1>
+        <p class="hero-desc">Complete all seven courses taught by the world's leading technology visionaries to earn your MasterClass Professional Certificate in Applied AI.</p>
+
+        <div class="overall-progress">
+          <div class="overall-progress-header">
+            <span>Overall Progress</span>
+            <strong>2 of 7 classes completed</strong>
+          </div>
+          <div class="overall-bar">
+            <div class="overall-bar-fill" style="width: 39%;"></div>
+          </div>
+          <div class="overall-label">39% complete</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Classes Section -->
+    <div class="classes-section">
+      <h2>Curriculum</h2>
+
+      <!-- 1. Sam Altman - Just Started -->
+      <div class="class-card">
+        <div class="class-headshot">
+          <img src="Headshots/Sam Altman.png" alt="Sam Altman">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Sam Altman</div>
+          <div class="class-title">Building Companies that Shape the Future with AI</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill in-progress" style="width: 8%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="class-percent in-progress">8%</div>
+          <div class="class-status-label in-progress">In Progress</div>
+        </div>
+      </div>
+
+      <!-- 2. Jensen Huang - Complete -->
+      <div class="class-card completed">
+        <div class="class-headshot">
+          <img src="Headshots/Jensen Huang.png" alt="Jensen Huang">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Jensen Huang</div>
+          <div class="class-title">Computing at the Speed of Thought: Engineering the AI Hardware Revolution</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill complete" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="class-status-label complete">Complete</div>
+        </div>
+      </div>
+
+      <!-- 3. Elon Musk - Complete -->
+      <div class="class-card completed">
+        <div class="class-headshot">
+          <img src="Headshots/Elon Musk.png" alt="Elon Musk">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Elon Musk</div>
+          <div class="class-title">First Principles Thinking: Designing AI for Civilization-Scale Impact</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill complete" style="width: 100%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="class-status-label complete">Complete</div>
+        </div>
+      </div>
+
+      <!-- 4. Mark Zuckerberg - In Progress -->
+      <div class="class-card">
+        <div class="class-headshot">
+          <img src="Headshots/Mark Zuckerberg.png" alt="Mark Zuckerberg">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Mark Zuckerberg</div>
+          <div class="class-title">Building AI Platforms that Connect Billions</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill in-progress" style="width: 45%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="class-percent in-progress">45%</div>
+          <div class="class-status-label in-progress">In Progress</div>
+        </div>
+      </div>
+
+      <!-- 5. Lisa Su - In Progress -->
+      <div class="class-card">
+        <div class="class-headshot">
+          <img src="Headshots/Lisa Su.png" alt="Lisa Su">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Lisa Su</div>
+          <div class="class-title">Leading AI Innovation: From Silicon to Supercomputers</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill in-progress" style="width: 20%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="class-percent in-progress">20%</div>
+          <div class="class-status-label in-progress">In Progress</div>
+        </div>
+      </div>
+
+      <!-- 6. Dario Amodei - Not Started -->
+      <div class="class-card">
+        <div class="class-headshot">
+          <img src="Headshots/Dario Amodei.png" alt="Dario Amodei">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Dario Amodei</div>
+          <div class="class-title">Building Safe and Reliable AI Systems</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill not-started" style="width: 0%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="class-percent not-started">0%</div>
+          <div class="class-status-label not-started">Not Started</div>
+        </div>
+      </div>
+
+      <!-- 7. Fei-Fei Li - Not Started -->
+      <div class="class-card">
+        <div class="class-headshot">
+          <img src="Headshots/Fei Fei Li.png" alt="Fei-Fei Li">
+        </div>
+        <div class="class-info">
+          <div class="class-instructor">Fei-Fei Li</div>
+          <div class="class-title">Human-Centered AI: Teaching Machines to See and Understand the World</div>
+          <div class="class-progress-bar">
+            <div class="class-progress-fill not-started" style="width: 0%;"></div>
+          </div>
+        </div>
+        <div class="class-status">
+          <div class="class-percent not-started">0%</div>
+          <div class="class-status-label not-started">Not Started</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
