@@ -223,7 +223,9 @@
 
     @media (max-width: 900px) {
       .video-grid { flex-direction: column; }
-      .cap-content { height: auto; }
+      .cap-content { height: auto; padding: 16px; }
+      .video-panel video { max-height: 50vh; }
+      .search-bar { display: none; }
     }
   </style>
 </head>
@@ -278,7 +280,7 @@
       <div class="video-grid">
         <!-- Capstone Video (left) -->
         <div class="video-panel">
-          <video id="capVideo" controls preload="metadata" autoplay loop muted>
+          <video id="capVideo" controls preload="metadata" autoplay loop muted playsinline webkit-playsinline>
             <source src="4_capstone_1.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>

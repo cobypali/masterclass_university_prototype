@@ -201,7 +201,9 @@
 
     @media (max-width: 900px) {
       .video-grid { flex-direction: column; }
-      .oh-content { height: auto; }
+      .oh-content { height: auto; padding: 16px; }
+      .video-panel video { max-height: 50vh; }
+      .search-bar { display: none; }
     }
   </style>
 </head>
@@ -256,7 +258,7 @@
       <div class="video-grid">
         <!-- Office Hours Video (left) -->
         <div class="video-panel">
-          <video id="ohVideo" controls preload="metadata" autoplay loop muted>
+          <video id="ohVideo" controls preload="metadata" autoplay loop muted playsinline webkit-playsinline>
             <source src="3_OH_1.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>

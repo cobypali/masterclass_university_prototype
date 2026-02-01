@@ -224,6 +224,22 @@
       font-size: 11px;
       font-weight: 500;
     }
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 768px) {
+      .search-bar { display: none; }
+      .discussion-content { padding: 16px; }
+      .webcam-pip {
+        right: 12px;
+        width: 30%;
+      }
+    }
+    @media (max-width: 480px) {
+      .video-wrapper video.main-video { max-height: 50vh; }
+      .webcam-pip {
+        width: 35%;
+        bottom: 60px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -276,7 +292,7 @@
       </div>
 
       <div class="video-wrapper">
-        <video class="main-video" id="discussionVideo" controls preload="metadata" autoplay loop muted>
+        <video class="main-video" id="discussionVideo" controls preload="metadata" autoplay loop muted playsinline webkit-playsinline>
           <source src="2_Discussion_Section_1.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
